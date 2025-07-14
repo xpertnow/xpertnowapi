@@ -10064,6 +10064,10 @@ const getTransactionDetails = async (request, response) => {
             wallet_balance: wallet_balance
           })
         }
+        return response.status(200).json({ success: true, msg: languageMessage.msgDataFound, transaction_arr: transaction_arr })
+      }
+      else {
+        return response.status(200).json({ success: false, msg: languageMessage.msgDataNotFound, transaction_arr: [] });
       }
     })
   }
