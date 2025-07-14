@@ -10042,9 +10042,9 @@ const sendRefundMail = async (request, response) => {
 const getTransactionDetails = async (request, response) => {
   const { user_id } = request.query;
   try {
-    if (!user_id) {
-      return response.status(200).json({ success: false, msg: languageMessage.msg_empty_param, key: 'user_id' });
-    }
+    // if (!user_id) {
+    //   return response.status(200).json({ success: false, msg: languageMessage.msg_empty_param, key: 'user_id' });
+    // }
     const sql = 'SELECT wm.transition_id , wm.amount, wm.wallet_balance, wm.createtime, wm.payment_transaction_id , um.name, wm.status, wm.type FROM  wallet_master wm JOIN user_master um ON wm.user_id = um.user_id WHERE wm.status = 0 AND wm.type = 1 AND wm.user_id = ?  ORDER BY wm.createtime DESC ';
     connection.query(sql, [user_id], async (err, res) => {
       if (err) {
