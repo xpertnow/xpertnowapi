@@ -8051,7 +8051,7 @@ const getCustomerScheduleSlot = (request, response) => {
             return response.status(200).json({ success: false, msg: languageMessage.msg_empty_param, key: "user_id" });
         }
         const current_date = new Date().toISOString().split('T')[0];
-        const query1 = "SELECT mobile, active_flag FROM user_master WHERE user_id = ? AND delete_flag = 0 AND user_type=2";
+        const query1 = "SELECT mobile, active_flag FROM user_master WHERE user_id = ? AND delete_flag = 0 AND user_type=1";
         const values1 = [user_id];
         connection.query(query1, values1, async (err, result) => {
             if (err) {
