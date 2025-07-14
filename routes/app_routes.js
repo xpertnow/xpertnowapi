@@ -14,6 +14,8 @@ const router = express.Router();
 router.post('/sign_up_1', async (req, res, next) => {
   await authenticateToken(req, res, next);
 }, upload.none(), upload.none(), usersignUp_1);
+
+
 router.post('/verifyotp', async (req, res, next) => {
   await authenticateToken(req, res, next);
 }, upload.none(), userOtpVerify);
