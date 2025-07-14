@@ -163,7 +163,7 @@ const {
   getTransactionDetails,
   getCallChargeRequest,
   approveCallChargeRequest,
-  rejectCallChargeRequest
+  // rejectCallChargeRequest
 
 } = require("../controller/admin_controller");
 router.post("/send_notification", upload.none(), send_notification);
@@ -365,7 +365,7 @@ router.post('/send_refund_email', upload.none(), sendRefundMail);
 router.get('/get_transaction_details', upload.none(), getTransactionDetails);
 router.get('/get_call_charge_requests', upload.none(), getCallChargeRequest);
 router.post('/approve_call_charge_request', upload.none(), approveCallChargeRequest);
-router.post('/reject_call_charge_reuqest', upload.none(), rejectCallChargeRequest);
+// router.post('/reject_call_charge_reuqest', upload.none(), rejectCallChargeRequest);
 
 // changess
 module.exports = router;
