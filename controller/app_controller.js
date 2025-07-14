@@ -7692,9 +7692,11 @@ const refundRequest = async (request, response) => {
 
                 const otp = await generateOTP(6);
 
+                const unique_no = await generateUniqueRefundNo(6);
 
-                const sql = 'INSERT INTO refund_request_master(user_id, name, email,mobile, description, title, otp, refund_amount, createtime, updatetime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())';
-                connection.query(sql, [user_id, name, email, mobile, description, request_title, otp, amount], async (err1, res1) => {
+
+                const sql = 'INSERT INTO refund_request_master(user_id, unique_no, name, email,mobile, description, title, otp, refund_amount, createtime, updatetime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())';
+                connection.query(sql, [user_id, unique_no, name, email, mobile, description, request_title, otp, amount], async (err1, res1) => {
                     try {
                         if (err1) {
                             return response.status(200).json({ success: false, msg: languageMessage.internalServerError, error: err1.message });
@@ -7754,6 +7756,16 @@ const refundRequest = async (request, response) => {
     }
 };
 
+
+
+async function generateUniqueRefundNo(limit, prefix = 'I') {
+    var digits = '1234567890';
+    let refundNo = prefix;
+    for (let i = 0; i < limit; i++) {
+        refundNo += digits[Math.floor(Math.random() * 10)];
+    }
+    return refundNo;
+}
 
 //  refund request otp verify 
 const refundOtpVerify = async (request, response) => {

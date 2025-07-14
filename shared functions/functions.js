@@ -53,6 +53,7 @@ async function hashPassword(password) {
     hash.update(password);
     return hash.digest('hex');
 }
+
 async function generateOTP(limit) {
     var digits = '0123456789';
     let OTP = '';
