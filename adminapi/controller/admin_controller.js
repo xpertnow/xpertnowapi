@@ -10040,7 +10040,7 @@ const sendRefundMail = async (request, response) => {
 
 // get customer transaction details 
 const getTransactionDetails = async (request, response) => {
-  const { user_id } = request.params;
+  const { user_id } = request.query;
   try {
     if (!user_id) {
       return response.status(200).json({ success: false, msg: languageMessage.msg_empty_param, key: 'user_id' });
