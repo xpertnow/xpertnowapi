@@ -36,6 +36,7 @@ const { request } = require("http");
 const { error } = require("console");
 const { responseSend } = require("../../shared functions/languageMessage");
 const { response } = require("express");
+const { use } = require("react");
 const FetchUser = async (request, response) => {
   try {
     const fetchDetails =
@@ -10130,7 +10131,7 @@ const getCallChargeRequest = async (request, response) => {
             new_call_charge: data.new_call_charge,
             name: data.name,
             updatetime: data.updatetime,
-            call_charge_status:   data.call_charge_status
+            call_charge_status: data.call_charge_status
           })
         }
         return response.status(200).json({ success: true, msg: languageMessage.msgDataFound, user_arr: user_arr })
@@ -10152,17 +10153,26 @@ const getCallChargeRequest = async (request, response) => {
 const approveCallChargeRequest = async (request, response) => {
   const { user_id } = request.body;
   try {
-    const update = 'UPDATE user_master SET call_charge_status = 2 WHERE user_id = ? AND delete_f;ag =0';
-    connection.query(update, [user_id], async (err, res) => {
-      if (err) {
-        return response.status(200).json({ success: false, msg: languageMessage.internalServerError, error: err.message })
+
+    const sql = 'SELECT call_charge , new_call_charge FROM user_master WHERE user_id = ? AND delete_flag =0';
+    connection.query(sql, [user_id], async (err1, res1) => {
+      if (err1) {
+        return response.status(200).json({ success: false, msg: languageMessage.internalServerError, error: err1.message })
       }
-      if (res.affectedRows > 0) {
-        return response.status(200).json({ success: true, msg: 'Charges accepted succesfully' });
-      }
-      else {
-        return response.status(200).json({ success: false, msg: languageMessage.msgDataNotFound })
-      }
+      let call_charge = res1[0].new_call_charge
+
+      const update = 'UPDATE user_master SET call_charge = ?, call_charge_status = 2 WHERE user_id = ? AND delete_f;ag =0';
+      connection.query(update, [call_charge, user_id], async (err, res) => {
+        if (err) {
+          return response.status(200).json({ success: false, msg: languageMessage.internalServerError, error: err.message })
+        }
+        if (res.affectedRows > 0) {
+          return response.status(200).json({ success: true, msg: 'Charges accepted succesfully' });
+        }
+        else {
+          return response.status(200).json({ success: false, msg: languageMessage.msgDataNotFound })
+        }
+      })
     })
   }
   catch (error) {
