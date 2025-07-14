@@ -35,6 +35,7 @@ const jwt = require("jsonwebtoken");
 const { request } = require("http");
 const { error } = require("console");
 const { responseSend } = require("../../shared functions/languageMessage");
+const { response } = require("express");
 const FetchUser = async (request, response) => {
   try {
     const fetchDetails =
@@ -10113,20 +10114,59 @@ async function getUserTotalWallet(user_id) {
 
 //  get call charges request  
 // call_charge_status - 1 = charge updated, 2 = apporved, 3= rejected .
-const getCallChargeRequest = async( request, response) =>{
- try{
-  const sql = 'SELECT new_call_charge, name, updatetime FROM user_master WHERE call_charge_status = 1 AND delete_flag = 0';
-  connection.query(sql, async(err, res) =>{
-    if(err){
-      return response.status(200).json({ success: false , msg: languageMessage.internalServerError, error: err.message});
-    }
-  })
- }
+const getCallChargeRequest = async (request, response) => {
+  try {
+    const sql = 'SELECT new_call_charge, name, updatetime FROM user_master WHERE call_charge_status = 1 AND delete_flag = 0';
+    connection.query(sql, async (err, res) => {
+      if (err) {
+        return response.status(200).json({ success: false, msg: languageMessage.internalServerError, error: err.message });
+      }
+
+      if (res.length > 0) {
+        let user_arr = [];
+        for (let data of res) {
+          user_arr.push({
+            new_call_charge: data.new_call_charge,
+            name: data.name,
+            updatetime: data.updatetime
+          })
+        }
+        return response.status(200).json({ success: true, msg: languageMessage.msgDataFound, user_arr: user_arr })
+      }
+      else {
+        return response.status(200).json({ success: false, msg: languageMessage.msgDataNotFound, user_arr: [] });
+      }
+
+
+    })
+  }
   catch (error) {
     return res.status(500).json({ success: false, msg: languageMessage.internalServerError, key: error.message });
   }
 }
 
+
+//  approve call charge request 
+const approveCallChargeRequest = async (request, response) => {
+  const { user_id } = request.body;
+  try {
+    const update = 'UPDATE user_master SET call_charge_status = 2 WHERE user_id = ? AND delete_f;ag =0';
+    connection.query(update, [user_id], async (err, res) => {
+      if (err) {
+        return response.status(200).json({ success: false, msg: languageMessage.internalServerError, error: err.message })
+      }
+      if (res.affectedRows > 0) {
+        return response.status(200).json({ success: true, msg: 'Charges accepted succesfully' });
+      }
+      else {
+        return response.status(200).json({ success: false, msg: languageMessage.msgDataNotFound })
+      }
+    })
+  }
+  catch (error) {
+    return res.status(500).json({ success: false, msg: languageMessage.internalServerError, key: error.message });
+  }
+}
 
 
 module.exports = {
@@ -10296,5 +10336,7 @@ module.exports = {
   rejectRefundRequest,
   getrefundDetailsById,
   sendRefundMail,
-  getTransactionDetails
+  getTransactionDetails,
+  getCallChargeRequest,
+  approveCallChargeRequest
 };

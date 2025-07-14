@@ -160,7 +160,9 @@ const {
   rejectRefundRequest,
   getrefundDetailsById,
   sendRefundMail,
-  getTransactionDetails
+  getTransactionDetails,
+  getCallChargeRequest,
+  approveCallChargeRequest
 
 } = require("../controller/admin_controller");
 router.post("/send_notification", upload.none(), send_notification);
@@ -360,6 +362,8 @@ router.post('/reject_refund', upload.none(), rejectRefundRequest);
 router.get('/get_refund_details_id/:refund_id', getrefundDetailsById);
 router.post('/send_refund_email', upload.none(), sendRefundMail);
 router.get('/get_transaction_details', upload.none(), getTransactionDetails);
+router.get('/get_call_charge_requests', upload.none(), getCallChargeRequest);
+router.post('/approve_call_charge_request', upload.none(), approveCallChargeRequest);
 
 
 // changess
