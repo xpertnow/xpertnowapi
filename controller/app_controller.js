@@ -7903,7 +7903,7 @@ const getRefundStatus = async (request, response) => {
             if (userRes[0].active_flag === 0) {
                 return response.status(200).json({ success: false, msg: languageMessage.accountdeactivated, active_status: 0 });
             }
-            const check = 'SELECT refund_id, title, description, refund_status, transaction_id , refund_amount, createtime FROM refund_request_master WHERE user_id = ? AND delete_flag= 0 AND otp_verify= 1 ORDER BY createtime DESC';
+            const check = 'SELECT refund_id, unique_no, title, description, refund_status, transaction_id , refund_amount, createtime FROM refund_request_master WHERE user_id = ? AND delete_flag= 0 AND otp_verify= 1 ORDER BY createtime DESC';
             connection.query(check, [user_id], async (err1, res1) => {
                 if (err1) {
                     return response.status(200).json({ success: false, msg: languageMessage.internalServerError, error: err1.message });
@@ -7927,7 +7927,8 @@ const getRefundStatus = async (request, response) => {
                         status_label: '0 = pending, 1 = accepted, 2 = rejected',
                         transaction_id: data.transaction_id ? data.transaction_id : 'NA',
                         // createtime: moment(data.createtime).format("MMM DD YYYY hh:mm A")
-                        createtime: moment(data.createtime).add(5, 'hours').add(30, 'minutes').format("MMM DD YYYY hh:mm A")
+                        createtime: moment(data.createtime).add(5, 'hours').add(30, 'minutes').format("MMM DD YYYY hh:mm A"),
+                        unique_no: data.unique_no
                     })
                 }
                 return response.status(200).json({ success: true, msg: languageMessage.dataFound, status_arr: status_arr, })
