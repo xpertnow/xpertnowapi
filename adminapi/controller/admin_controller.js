@@ -10116,7 +10116,7 @@ async function getUserTotalWallet(user_id) {
 // call_charge_status - 1 = charge updated, 2 = apporved, 3= rejected .
 const getCallChargeRequest = async (request, response) => {
   try {
-    const sql = 'SELECT new_call_charge, name, updatetime FROM user_master WHERE call_charge_status = 1 AND delete_flag = 0';
+    const sql = 'SELECT  user_id, new_call_charge, name, updatetime FROM user_master WHERE call_charge_status = 1 AND delete_flag = 0';
     connection.query(sql, async (err, res) => {
       if (err) {
         return response.status(200).json({ success: false, msg: languageMessage.internalServerError, error: err.message });
@@ -10126,6 +10126,7 @@ const getCallChargeRequest = async (request, response) => {
         let user_arr = [];
         for (let data of res) {
           user_arr.push({
+            user_id: data.user_id,
             new_call_charge: data.new_call_charge,
             name: data.name,
             updatetime: data.updatetime
