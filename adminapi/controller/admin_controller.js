@@ -10078,6 +10078,8 @@ const getTransactionDetails = async (request, response) => {
   }
 }
 
+
+// get user total wallet balance 
 async function getUserTotalWallet(user_id) {
   return new Promise((resolve, reject) => {
     connection.query(
