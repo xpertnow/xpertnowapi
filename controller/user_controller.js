@@ -11,6 +11,7 @@ const { mailer } = require('./MailerApi');
 
 // send otp on mobile function
 const https = require('https');
+const { request } = require('http');
 async function otpSendMessage(mobile, otp) {
     return new Promise((resolve, reject) => {
         const options = {
@@ -2612,6 +2613,10 @@ const getRequestStatus = async (request, response) => {
         return response.status(200).json({ success: false, msg: languageMessage.internalServerError, error: error.message });
     }
 }
+
+
+
+
 
 
 

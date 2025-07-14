@@ -11,9 +11,7 @@ const { generateVideocallToken, VideoVoiceCallStart, VideoVoiceCallJoin, generat
 const router = express.Router();
 
 //Starting customer routes
-router.post('/sign_up_1', async (req, res, next) => {
-  await authenticateToken(req, res, next);
-}, upload.none(), upload.none(), usersignUp_1);
+router.post('/sign_up_1', upload.none(), usersignUp_1);
 
 
 router.post('/verifyotp', async (req, res, next) => {

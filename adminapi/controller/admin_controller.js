@@ -10111,6 +10111,23 @@ async function getUserTotalWallet(user_id) {
 
 
 
+//  get call charges request  
+// call_charge_status - 1 = charge updated, 2 = apporved, 3= rejected .
+const getCallChargeRequest = async( request, response) =>{
+ try{
+  const sql = 'SELECT new_call_charge, name, updatetime FROM user_master WHERE call_charge_status = 1 AND delete_flag = 0';
+  connection.query(sql, async(err, res) =>{
+    if(err){
+      return response.status(200).json({ success: false , msg: languageMessage.internalServerError, error: err.message});
+    }
+  })
+ }
+  catch (error) {
+    return res.status(500).json({ success: false, msg: languageMessage.internalServerError, key: error.message });
+  }
+}
+
+
 
 module.exports = {
   EditTax,
