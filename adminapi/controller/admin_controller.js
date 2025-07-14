@@ -9075,34 +9075,7 @@ ON
 };
 
 
-async function getUserTotalWallet(user_id) {
-  return new Promise((resolve, reject) => {
-    connection.query(
-      `SELECT SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) AS credit_amount,
-                SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) AS debit_amount
-            FROM wallet_master
-            WHERE user_id = ? AND delete_flag = 0
-            `,
-      [user_id],
-      (error, rows) => {
-        if (error) {
-          console.log("Database error while fetching user wallet details");
-          reject(error); // Reject the promise with the error
-        } else {
-          if (rows.length > 0) {
-            const creditAmount = rows[0].credit_amount || 0;
-            const debitAmount = rows[0].debit_amount || 0;
-            // Calculate the wallet balance
-            const walletBalance = creditAmount - debitAmount;
-            resolve(parseFloat(walletBalance.toFixed(2))); // Resolve with the calculated wallet balance
-          } else {
-            resolve(0); // Resolve with "NA" if no rows are returned
-          }
-        }
-      }
-    );
-  });
-}
+
 const MarkAsResolved = (req, res) => {
   const { milestone_id } = req.body;
   if (!milestone_id) {
@@ -10065,9 +10038,68 @@ const sendRefundMail = async (request, response) => {
 
 
 
+// get customer transaction details 
+const getTransactionDetails = async (request, response) => {
+  const { user_id } = request.params;
+  try {
+    if (!user_id) {
+      return response.status(200).json({ success: false, msg: languageMessage.msg_empty_param, key: 'user_id' });
+    }
+    const sql = 'SELECT wm.transition_id , wm.amount, wm.wallet_balance, wm.createtime, wm.payment_transaction_id , um.name FROM  wallet_master wm JOIN user_master um ON wm.user_id = um.user_id WHERE wm.status = 0 AND wm.type = 1 AND wm.user_id = ?  ORDER BY wm.createtime DESC ';
+    connection.query(sql, [user_id], async (err, res) => {
+      if (err) {
+        return response.status(200).json({ success: false, msg: languageMessage.internalServerError, err: err.message });
+      }
 
+      if (res.length > 0) {
+        let transaction_arr = [];
+        let wallet_balance = await getUserTotalWallet(user_id);
+        for (let data of res) {
+          transaction_arr.push({
+            transition_id: data.transition_id,
+            amount: data.amount,
+            createtime: data.createtime,
+            payment_transaction_id: data.payment_transaction_id,
+            name: data.name,
+            wallet_balance: wallet_balance
+          })
+        }
+      }
+    })
+  }
+  catch (error) {
+    return res.status(500).json({ success: false, msg: languageMessage.internalServerError, key: error.message });
+  }
+}
 
-
+async function getUserTotalWallet(user_id) {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      `SELECT SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) AS credit_amount,
+                SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) AS debit_amount
+            FROM wallet_master
+            WHERE user_id = ? AND delete_flag = 0
+            `,
+      [user_id],
+      (error, rows) => {
+        if (error) {
+          console.log("Database error while fetching user wallet details");
+          reject(error); // Reject the promise with the error
+        } else {
+          if (rows.length > 0) {
+            const creditAmount = rows[0].credit_amount || 0;
+            const debitAmount = rows[0].debit_amount || 0;
+            // Calculate the wallet balance
+            const walletBalance = creditAmount - debitAmount;
+            resolve(parseFloat(walletBalance.toFixed(2))); // Resolve with the calculated wallet balance
+          } else {
+            resolve(0); // Resolve with "NA" if no rows are returned
+          }
+        }
+      }
+    );
+  });
+}
 
 
 
@@ -10238,5 +10270,6 @@ module.exports = {
   acceptRefund,
   rejectRefundRequest,
   getrefundDetailsById,
-  sendRefundMail
+  sendRefundMail,
+  getTransactionDetails
 };

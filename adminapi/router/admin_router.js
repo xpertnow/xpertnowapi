@@ -159,7 +159,8 @@ const {
   acceptRefund,
   rejectRefundRequest,
   getrefundDetailsById,
-  sendRefundMail
+  sendRefundMail,
+  getTransactionDetails
 
 } = require("../controller/admin_controller");
 router.post("/send_notification", upload.none(), send_notification);
@@ -358,6 +359,7 @@ router.post('/accept_refund', upload.none(), acceptRefund);
 router.post('/reject_refund', upload.none(), rejectRefundRequest);
 router.get('/get_refund_details_id/:refund_id', getrefundDetailsById);
 router.post('/send_refund_email', upload.none(), sendRefundMail);
+router.get('/get_transaction_details', upload.none(), getTransactionDetails);
 
 
 // changess
