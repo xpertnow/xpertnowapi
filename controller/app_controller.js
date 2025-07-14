@@ -7758,7 +7758,7 @@ const refundRequest = async (request, response) => {
 
 
 
-async function generateUniqueRefundNo(limit, prefix = 'I') {
+async function generateUniqueRefundNo(limit, prefix = 'R') {
     var digits = '1234567890';
     let refundNo = prefix;
     for (let i = 0; i < limit; i++) {
