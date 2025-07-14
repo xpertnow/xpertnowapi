@@ -10130,7 +10130,7 @@ const getCallChargeRequest = async (request, response) => {
             new_call_charge: data.new_call_charge,
             name: data.name,
             updatetime: data.updatetime,
-            call_charge_status: data.call_charge_status
+            call_charge_status:   data.call_charge_status
           })
         }
         return response.status(200).json({ success: true, msg: languageMessage.msgDataFound, user_arr: user_arr })
