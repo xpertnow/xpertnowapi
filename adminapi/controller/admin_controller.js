@@ -9902,6 +9902,7 @@ const getAllRefundRequests = async (request, response) => {
           refund_status: data.refund_status,
           status: data.refund_status === 0 ? 'Pending' : data.refund_status === 1 ? 'Accepted' : data.refund_status === 2 ? 'Rejected' : 'Replied',
           transaction_id: data.transaction_id,
+          unique_no: data.unique_no,
           // createtime: moment(data.createtime).format("DD/MM/YYYY hh:mm A"),
 
           createtime: moment(data.createtime).add(5, 'hours').add(30, 'minutes').format("DD/MM/YYYY hh:mm A")
@@ -9994,6 +9995,7 @@ const getrefundDetailsById = async (request, response) => {
         refund_status: data.refund_status,
         status: data.refund_status === 0 ? 'Pending' : data.refund_status === 1 ? 'Accepted' : data.refund_status === 2 ? 'Rejected' : 'Replied',
         transaction_id: data.transaction_id,
+        unique_no: data.unique_no,
         // createtime: moment(data.createtime).format("DD/MM/YYYY hh:mm A"),
 
         createtime: moment(data.createtime).add(5, 'hours').add(30, 'minutes').format("DD/MM/YYYY hh:mm A")
