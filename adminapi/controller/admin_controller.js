@@ -10061,7 +10061,9 @@ const getTransactionDetails = async (request, response) => {
             createtime: data.createtime,
             payment_transaction_id: data.payment_transaction_id,
             name: data.name,
-            wallet_balance: wallet_balance
+            wallet_balance: wallet_balance,
+            status: data.status,
+            type: data.type
           })
         }
         return response.status(200).json({ success: true, msg: languageMessage.msgDataFound, transaction_arr: transaction_arr })
