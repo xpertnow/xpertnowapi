@@ -10077,6 +10077,36 @@ async function getUserTotalWallet(user_id) {
 
 
 
+//  get getCallChargeRequest  call_charge_status - 1 = updated, 2 = accepted, 3 = rejected
+const getCallChargeRequest = async (request, response) => {
+    try {
+        const sql = 'SELECT * FROM user_master WHERE call_charge_status = 1 AND delete_flag = 0 ORDER BY updatetime DESC';
+        connection.query(sql, async (err, res) => {
+            if (err) {
+                return response.status(200).json({ success: false, msg: languageMessage.internalServerError, error: err.message });
+            }
+
+            if (res.length == 0) {
+                return response.status(200).json({ success: false, msg: languageMessage.msgDataNotFound, user_arr: [] });
+            }
+
+            let user_arr = [];
+            for (let data of res) {
+                user_arr.push({
+                    user_id: data.user_id,
+                    new_call_charge: data.new_call_charge,
+                    name: data.name,
+                    updatetime: data.updatetime,
+                    call_charge_status: data.call_charge_status
+                })
+            }
+            return response.status(200).json({ success: true, msg: languageMessage.msgDataFound, user_arr: user_arr })
+        })
+    }
+    catch (error) {
+        return res.status(500).json({ success: false, msg: languageMessage.internalServerError, key: error.message });
+    }
+}
 
 
 
@@ -10247,5 +10277,6 @@ module.exports = {
     rejectRefundRequest,
     getrefundDetailsById,
     sendRefundMail,
-    getTransactionDetails
+    getTransactionDetails,
+    getCallChargeRequest
 };
