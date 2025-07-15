@@ -169,17 +169,6 @@ const usersignUp_1 = async (request, response) => {
                         connection.query(deleteOldSessionQuery, [user_id_get]);
                     }
 
-                    // if (sessionResult.length > 0) {
-                    //     const existingDeviceId = sessionResult[0].device_id;
-                    //     if (existingDeviceId !== device_id) {
-                    //         return response.status(200).json({
-                    //             success: false,
-                    //             msg: languageMessage.accountAlreadyLoggedIn,
-                    //             // existing_device_id: existingDeviceId
-                    //         });
-                    //     }
-                    // }
-
                     const token = jwt.sign({ user_id_get, device_id }, SECRET_KEY, { expiresIn: "1h" });
                     const insertSessionQuery = "INSERT INTO user_sessions (user_id, device_id, token) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE token = ?";
                     connection.query(insertSessionQuery, [user_id_get, device_id, token, token]);
