@@ -130,8 +130,6 @@ const usersignUp_1 = async (request, response) => {
 
     try {
 
-
-
         const query1 = "SELECT user_id, active_flag, user_type FROM user_master WHERE mobile = ? AND delete_flag=0";
         const values1 = [mobile];
         connection.query(query1, values1, async (err, result) => {
@@ -2079,9 +2077,9 @@ const getExpertEye = async (request, response) => {
                     return response.status(200).json({ success: false, msg: languageMessage.accountdeactivated, active_status: 0 });
                 }
 
-                if (result[0].expert_status === 0) {
-                    return response.status(200).json({ success: false, msg: languageMessage.accountunderReview, });
-                }
+                // if (result[0].expert_status === 0) {
+                //     return response.status(200).json({ success: false, msg: languageMessage.accountunderReview, });
+                // }
                 const query2 = "SELECT expert_eye_id, content, createtime, updatetime FROM expert_eye_master WHERE delete_flag=0 ";
                 const values2 = [user_id];
                 connection.query(query2, async (err, result) => {

@@ -142,6 +142,5 @@ const messages = {
   RefundRequestNotSent: ['Refund request has not been sent, please try again'],
   accountunderReview: ['Your account has been successfully created, Please wait, until admin will approve your account']
 
-
 };
 module.exports = messages; 
