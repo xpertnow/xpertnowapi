@@ -169,7 +169,6 @@ const usersignUp_1 = async (request, response) => {
                         connection.query(deleteOldSessionQuery, [user_id_get]);
                     }
 
-
                     // if (sessionResult.length > 0) {
                     //     const existingDeviceId = sessionResult[0].device_id;
                     //     if (existingDeviceId !== device_id) {
