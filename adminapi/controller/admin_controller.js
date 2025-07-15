@@ -10143,6 +10143,39 @@ const approveCallChargeRequest = async (request, response) => {
 }
 
 
+//  reject call charge request . 
+const rejectCallChargeRequest = async (request, response) => {
+    const { user_id } = request.body;
+    try {
+        const sql = 'SELECT new_call_charge FROM user_master WHERE user_id = ? AND delete_flag = 0';
+        connection.query(sql, [user_id], async (err, res) => {
+            if (err) {
+                return response.status(200).json({ success: false, msg: languageMessage.internalServerError, error: err.message });
+            }
+
+            if (res.length == 0) {
+                return response.status(200).json({ success: false, msg: languageMessage.msgDataNotFound, user_arr: [] });
+            }
+            // let new_call_charge = res[0].new_call_charge;
+            const update = 'UPDATE user_master SET call_charge_status = 3 WHERE user_id = ? AND delete_flag = 0';
+            connection.query(update, [user_id], async (err1, res1) => {
+                if (err1) {
+                    return response.status(200).json({ success: false, msg: languageMessage.internalServerError, error: err1.message });
+                }
+
+                if (res1.affectedRows == 0) {
+                    return response.status(200).json({ success: false, msg: 'Request has not been rejected' });
+                }
+                return response.status(200).json({ success: true, msg: 'request rejected successfully' })
+            })
+
+        })
+    }
+    catch (error) {
+        return res.status(500).json({ success: false, msg: languageMessage.internalServerError, key: error.message });
+    }
+}
+
 
 module.exports = {
     EditTax,
@@ -10313,5 +10346,6 @@ module.exports = {
     sendRefundMail,
     getTransactionDetails,
     getCallChargeRequest,
-    approveCallChargeRequest
+    approveCallChargeRequest,
+    rejectCallChargeRequest
 };
