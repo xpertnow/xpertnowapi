@@ -9852,6 +9852,7 @@ const getAllRefundRequests = async (request, response) => {
                     status: data.refund_status === 0 ? 'Pending' : data.refund_status === 1 ? 'Accepted' : data.refund_status === 2 ? 'Rejected' : 'Replied',
                     transaction_id: data.transaction_id,
                     createtime: moment(data.createtime).format("DD/MM/YYYY hh:mm A"),
+                    unique_no: data.unique_no
                 })
 
             }
@@ -9944,6 +9945,7 @@ const getrefundDetailsById = async (request, response) => {
                 status: data.refund_status === 0 ? 'Pending' : data.refund_status === 1 ? 'Accepted' : data.refund_status === 2 ? 'Rejected' : 'Replied',
                 transaction_id: data.transaction_id,
                 createtime: moment(data.createtime).format("DD/MM/YYYY hh:mm A"),
+                unique_no: data.unique_no
             })
             return response.status(200).json({ success: true, msg: languageMessage.msgDataFound, request_arr: request_arr })
         })
@@ -10011,6 +10013,67 @@ const sendRefundMail = async (request, response) => {
 
 
 
+// get transaction details 
+const getTransactionDetails = async (request, response) => {
+    const { user_id } = request.query;
+    try {
+        const sql = 'SELECT wm.transition_id, wm.payment_transaction_id, wm.user_id , wm.amount, wm.createtime, wm.status, wm.type FROM wallet_master wm  WHERE wm.user_id = ? AND wm.delete_flag = 0 ORDER BY wm.createtime DESC';
+        connection.query(sql, [user_id], async (err, res) => {
+            if (err) {
+                return response.status(200).json({ success: false, msg: languageMessage.internalServerError, error: err.message });
+            }
+            if (res.length == 0) {
+                return response.status(200).json({ success: false, msg: languageMessage.msgDataNotFound, transaction_arr: [] });
+            }
+
+            let transaction_arr = [];
+            let wallet_balance = await getUserTotalWallet(user_id);
+            for (let data of res) {
+                transaction_arr.push({
+                    transition_id: data.transition_id,
+                    amount: data.amount,
+                    createtime: data.createtime,
+                    payment_transaction_id: data.payment_transaction_id,
+                    status: data.status,
+                    type: data.type,
+                    wallet_balance: wallet_balance
+                })
+            }
+            return response.status(200).json({ success: true, msg: languageMessage.msgDataFound, transaction_arr: transaction_arr })
+        })
+    }
+    catch (error) {
+        return res.status(500).json({ success: false, msg: languageMessage.internalServerError, key: error.message });
+    }
+}
+async function getUserTotalWallet(user_id) {
+    return new Promise((resolve, reject) => {
+        connection.query(
+            `SELECT SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) AS credit_amount,
+                SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) AS debit_amount
+            FROM wallet_master
+            WHERE user_id = ? AND delete_flag = 0
+            `,
+            [user_id],
+            (error, rows) => {
+                if (error) {
+                    console.log("Database error while fetching user wallet details");
+                    reject(error); // Reject the promise with the error
+                } else {
+                    if (rows.length > 0) {
+                        const creditAmount = rows[0].credit_amount || 0;
+                        const debitAmount = rows[0].debit_amount || 0;
+                        // Calculate the wallet balance
+                        const walletBalance = creditAmount - debitAmount;
+                        resolve(parseFloat(walletBalance.toFixed(2))); // Resolve with the calculated wallet balance
+                    } else {
+                        resolve(0); // Resolve with "NA" if no rows are returned
+                    }
+                }
+            }
+        );
+    });
+}
 
 
 
@@ -10183,5 +10246,6 @@ module.exports = {
     acceptRefund,
     rejectRefundRequest,
     getrefundDetailsById,
-    sendRefundMail
+    sendRefundMail,
+    getTransactionDetails
 };
