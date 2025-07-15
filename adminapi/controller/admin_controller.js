@@ -10015,7 +10015,7 @@ const sendRefundMail = async (request, response) => {
 const getTransactionDetails = async (request, response) => {
     const { user_id } = request.query;
     try {
-        const sql = 'SELECT wm.transition_id, wm.payment_transaction_id, wm.user_id , wm.amount, wm.createtime, wm.status, wm.type FROM wallet_master wm  WHERE wm.user_id = ? wm.status = 0 AND wm.type = 1 AND wm.delete_flag = 0 ORDER BY wm.createtime DESC';
+        const sql = 'SELECT wm.transition_id, wm.payment_transaction_id, wm.user_id , wm.amount, wm.createtime, wm.status, wm.type FROM wallet_master wm  WHERE wm.user_id = ? AND wm.status = 0 AND wm.type = 1 AND wm.delete_flag = 0 ORDER BY wm.createtime DESC';
         connection.query(sql, [user_id], async (err, res) => {
             if (err) {
                 return response.status(200).json({ success: false, msg: languageMessage.internalServerError, error: err.message });
