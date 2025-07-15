@@ -162,7 +162,7 @@ const {
   sendRefundMail,
   getTransactionDetails,
   getCallChargeRequest,
-  // approveCallChargeRequest,
+  approveCallChargeRequest,
   // rejectCallChargeRequest
 
 } = require("../controller/admin_controller");
@@ -364,7 +364,7 @@ router.get('/get_refund_details_id/:refund_id', getrefundDetailsById);
 router.post('/send_refund_email', upload.none(), sendRefundMail);
 router.get('/get_transaction_details', upload.none(), getTransactionDetails);
 router.get('/get_call_charge_requests', upload.none(), getCallChargeRequest);
-// router.post('/approve_call_charge_request', upload.none(), approveCallChargeRequest);
+router.post('/approve_call_charge_request', upload.none(), approveCallChargeRequest);
 // router.post('/reject_call_charge_reuqest', upload.none(), rejectCallChargeRequest);
 
 // changess
