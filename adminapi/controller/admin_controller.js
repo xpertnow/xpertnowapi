@@ -10094,7 +10094,7 @@ const getCallChargeRequest = async (request, response) => {
                     user_id: data.user_id,
                     new_call_charge: data.new_call_charge,
                     name: data.name,
-                    updatetime: data.updatetime,
+                    updatetime: moment(data.updatetime).format("DD/MM/YYYY hh:mm A"),
                     call_charge_status: data.call_charge_status,
                     edit_call_charge_status: data.edit_call_charge_status
                 })
