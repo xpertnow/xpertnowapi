@@ -10122,7 +10122,7 @@ const approveCallChargeRequest = async (request, response) => {
                 return response.status(200).json({ success: false, msg: languageMessage.msgDataNotFound, user_arr: [] });
             }
             let new_call_charge = res[0].new_call_charge;
-            const update = 'UPDATE user_master SET call_charge = ?, call_charge_status = 1  WHERE user_id = ? AND delete_flag = 0';
+            const update = 'UPDATE user_master SET call_charge = ?, call_charge_status = 1, edit_call_charge_status = 2  WHERE user_id = ? AND delete_flag = 0';
             connection.query(update, [new_call_charge, user_id], async (err1, res1) => {
                 if (err1) {
                     return response.status(200).json({ success: false, msg: languageMessage.internalServerError, error: err1.message });
