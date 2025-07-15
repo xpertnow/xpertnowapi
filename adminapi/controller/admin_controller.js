@@ -548,12 +548,9 @@ const AcceptRejectExpert = async (req, res) => {
                 const user_id_notification = 1;
                 const other_user_id_notification = user_id;
                 const action_id = user_id;
-
-                const action = status == 1 ? "Approve" : "Reject";
-                const title = status == 1 ? "Approve" : "Reject";
-                const messages = status == 1
-                    ? "Congratulations! Your account has been approved."
-                    : "Sorry, your account has been rejected.";
+                const action = 'Approve';
+                const title = `Approve`;
+                const messages = "Congratulations! Your account has been approved.";
                 const title_2 = title;
                 const title_3 = title;
                 const title_4 = title;
