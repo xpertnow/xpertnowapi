@@ -7582,18 +7582,24 @@ const getSubscriptionStatus = async (request, response) => {
             return response.status(200).json({ success: false, msg: languageMessage.msg_empty_param, key: 'user_id' });
         }
 
-        const checkUser = 'SELECT user_id, active_flag FROM user_master WHERE user_id = ? AND delete_flag = 0';
+        const checkUser = 'SELECT user_id, active_flag, expert_status, user_type FROM user_master WHERE user_id = ? AND delete_flag = 0';
         connection.query(checkUser, [user_id], (err, userRes) => {
             if (err) {
                 return response.status(200).json({ success: false, msg: languageMessage.internalServerError, error: err.message });
             }
 
             if (userRes.length === 0) {
-                return response.status(200).json({ success: false, msg: languageMessage.UserNotFound });
+                return response.status(200).json({ success: false, msg: languageMessage.msgDataNotFound });
             }
 
             if (userRes[0].active_flag === 0) {
                 return response.status(200).json({ success: false, msg: languageMessage.accountdeactivated, active_status: 0 });
+            }
+
+            if (userRes[0].user_type == 2) {
+                if (userRes[0].expert_status == 0) {
+                    return response.status(200).json({ success: false, msg: languageMessage.accountunderReview });
+                }
             }
 
             const checkSubscription = `
