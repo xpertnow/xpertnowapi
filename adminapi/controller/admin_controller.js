@@ -533,7 +533,7 @@ const AcceptRejectExpert = async (req, res) => {
             // Fetch user details from the database
             const userDetailQuery =
                 "SELECT name, email,expert_status FROM user_master WHERE user_id = ?";
-            connection.query(userDetailQuery, [user_id], (userError, userResults) => {
+            connection.query(userDetailQuery, [user_id], async (userError, userResults) => {
                 if (userError || !userResults.length) {
                     console.error("Error fetching user details:", userError);
                     return res.status(500).json({
@@ -542,6 +542,36 @@ const AcceptRejectExpert = async (req, res) => {
                         error: error,
                     });
                 }
+
+
+
+                const user_id_notification = 1;
+                const other_user_id_notification = user_id;
+                const action_id = user_id;
+
+                const action = status == 1 ? "Approve" : "Reject";
+                const title = status == 1 ? "Approve" : "Reject";
+                const messages = status == 1
+                    ? "Congratulations! Your account has been approved."
+                    : "Sorry, your account has been rejected.";
+                const title_2 = title;
+                const title_3 = title;
+                const title_4 = title;
+                const message_2 = messages;
+                const message_3 = messages;
+                const message_4 = messages;
+                const action_data = { user_id: user_id_notification, other_user_id: other_user_id_notification, action_id: action_id, action: action };
+                await getNotificationArrSingle(user_id_notification, other_user_id_notification, action, action_id, title, title_2, title_3, title_4, messages, message_2, message_3, message_4, action_data, async (notification_arr_check) => {
+                    let notification_arr_check_new = [notification_arr_check];
+
+                    if (notification_arr_check_new && notification_arr_check_new.length !== 0 && notification_arr_check_new != '') {
+                        const notiSendStatus = await oneSignalNotificationSendCall(notification_arr_check_new);
+
+                    } else {
+                        console.log("Notification array is empty");
+                    }
+                });
+
                 const { name, email, expert_status } = userResults[0];
                 const fromName = app_name;
                 const subject = "Account Info";
@@ -568,6 +598,8 @@ const AcceptRejectExpert = async (req, res) => {
                         console.error("Error sending email:", error);
                     });
             });
+
+
             if (status == 1) {
                 return res.status(200).json({
                     success: true,
