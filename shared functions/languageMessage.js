@@ -127,7 +127,7 @@ const messages = {
   expertOffline: ['Expert is offline'],
   expertOnline: ['Expert is online'],
   CannotWithdraw: ['You cannot withdraw amount. The minimum amount must be ₹10,000'],
-  
+
   RequestSent: ['Profile update request sent successfully'],
   RequestNotSent: ['Profile update request has not been sent, please try again'],
 
@@ -138,9 +138,9 @@ const messages = {
   MinimumWithdrawalAmount: ['Minimum withdrawal amount must be '],
   SubscriptionExpired: ['Your subscription has expired'],
   InvalidNumber: ['Invalid mobile number'],
-  WalletbalanceInvalid: ['Invalid wallet balance'], 
-  RefundRequestNotSent : ['Refund request has not been sent, please try again'],
-  
+  WalletbalanceInvalid: ['Invalid wallet balance'],
+  RefundRequestNotSent: ['Refund request has not been sent, please try again'],
+  accountunderReview: ['Your account has been successfully created, Please wait, until admin will approve your account']
 
 
 };

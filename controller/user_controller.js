@@ -2066,7 +2066,7 @@ const getExpertEye = async (request, response) => {
     }
     try {
         if (user_id > 0) {
-            const query1 = "SELECT mobile, active_flag FROM user_master WHERE user_id = ? AND delete_flag=0 ";
+            const query1 = "SELECT mobile, active_flag, expert_status FROM user_master WHERE user_id = ? AND delete_flag=0 ";
             const values1 = [user_id];
             connection.query(query1, values1, async (err, result) => {
                 if (err) {
@@ -2077,6 +2077,10 @@ const getExpertEye = async (request, response) => {
                 }
                 if (result[0]?.active_flag === 0) {
                     return response.status(200).json({ success: false, msg: languageMessage.accountdeactivated, active_status: 0 });
+                }
+
+                if (result[0].expert_status === 0) {
+                    return response.status(200).json({ success: false, msg: languageMessage.accountunderReview, });
                 }
                 const query2 = "SELECT expert_eye_id, content, createtime, updatetime FROM expert_eye_master WHERE delete_flag=0 ";
                 const values2 = [user_id];
