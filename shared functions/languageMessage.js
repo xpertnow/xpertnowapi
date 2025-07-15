@@ -140,7 +140,8 @@ const messages = {
   InvalidNumber: ['Invalid mobile number'],
   WalletbalanceInvalid: ['Invalid wallet balance'],
   RefundRequestNotSent: ['Refund request has not been sent, please try again'],
-  accountunderReview: ['Your account has been successfully created, Please wait, until admin will approve your account']
+  accountunderReview: ['Your account has been successfully created, Please wait, until admin will approve your account'],
+accountAlreadyLoggedIn: ["Your account is already logged in on another device"]
 
 };
 module.exports = messages; 
