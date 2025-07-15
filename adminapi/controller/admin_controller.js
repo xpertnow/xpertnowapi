@@ -548,9 +548,9 @@ const AcceptRejectExpert = async (req, res) => {
                 const user_id_notification = 1;
                 const other_user_id_notification = user_id;
                 const action_id = user_id;
-                const action = 'Approve';
-                const title = `Approve`;
-                const messages = "Congratulations! Your account has been approved.";
+                const action = status == 1 ? 'Approve' : 'Reject';
+                const title = status == 1 ? 'Account Approved' : 'Account Rejected';
+                const messages = status == 1 ? "Congratulations! Your account has been approved" : 'Your account has been rejected';
                 const title_2 = title;
                 const title_3 = title;
                 const title_4 = title;
@@ -558,11 +558,11 @@ const AcceptRejectExpert = async (req, res) => {
                 const message_3 = messages;
                 const message_4 = messages;
                 const action_data = { user_id: user_id_notification, other_user_id: other_user_id_notification, action_id: action_id, action: action };
-                await getNotificationArrSingle(user_id_notification, other_user_id_notification, action, action_id, title, title_2, title_3, title_4, messages, message_2, message_3, message_4, action_data, async (notification_arr_check) => {
+                await getNotificationArrSingle1(user_id_notification, other_user_id_notification, action, action_id, title, title_2, title_3, title_4, messages, message_2, message_3, message_4, action_data, async (notification_arr_check) => {
                     let notification_arr_check_new = [notification_arr_check];
 
                     if (notification_arr_check_new && notification_arr_check_new.length !== 0 && notification_arr_check_new != '') {
-                        const notiSendStatus = await oneSignalNotificationSendCall(notification_arr_check_new);
+                        const notiSendStatus = await oneSignalNotificationSendCall1(notification_arr_check_new);
 
                     } else {
                         console.log("Notification array is empty");
@@ -10207,6 +10207,129 @@ const rejectCallChargeRequest = async (request, response) => {
         return res.status(500).json({ success: false, msg: languageMessage.internalServerError, key: error.message });
     }
 }
+
+
+
+
+
+
+
+
+
+async function getNotificationArrSingle1(user_id, other_user_id, action, action_id, title, title_2, title_3, title_4, message, message_2, message_3, message_4, action_data, callback) {
+    const notification_arr = {};
+    const action_json = JSON.stringify(action_data);
+
+    InsertNotification(user_id, other_user_id, action, action_id, action_json, title, title_2, title_3, title_4, message, message_2, message_3, message_4, (insert_status) => {
+
+        if (insert_status === 'yes') {
+
+            getNotificationStatus(other_user_id, (notification_status) => {
+
+
+                getUserPlayerId(other_user_id, async (player_id) => {
+
+                    if (player_id !== 'no') {
+                        notification_arr.player_id = player_id;
+
+                        notification_arr.title = title;
+                        notification_arr.message = message;
+                        notification_arr.action_json = action_data;
+
+                        await oneSignalNotificationSend1(title, message, action_json, notification_arr.player_id);
+                        callback(notification_arr);
+                    } else {
+
+                        callback(notification_arr);
+                    }
+                });
+
+            });
+        } else {
+            callback(notification_arr);
+        }
+    });
+}
+function InsertNotification1(user_id, other_user_id, action, action_id, action_json, title, title_2, title_3, title_4, message, message_2, message_3, message_4, callback) {
+    const read_status = '0';
+    const delete_flag = '0';
+
+    let createtime = moment().format('YYYY-MM-DD HH:mm:ss');
+    // 17
+    const sql = "INSERT INTO user_notification_message (user_id, other_user_id, action, action_id, action_json, title,title_2,title_3,title_4, message,message_2,message_3,message_4, read_status, delete_flag, createtime, updatetime) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    connection.query(sql, [user_id, other_user_id, action, action_id, action_json, title, title_2, title_3, title_4, message, message_2, message_3, message_4, read_status, delete_flag, createtime, createtime], (error, results) => {
+        if (error) {
+            console.error('Error inserting notification:', error);
+            callback('no');
+        } else {
+            callback('yes');
+        }
+    });
+}
+
+async function oneSignalNotificationSend1(title, message, jsonData, player_id_arr) {
+    try {
+        var oneSignalAppId = "c3a25067-c262-4916-8db6-56f2598bba14";
+        var oneSignalAuthorization = "os_v2_app_yorfaz6cmjerndnwk3zftc52crzlq6ahr6yu2g5wiumvu47icqtjghyky6idkqi5aziuqlo3z43p6nvdmuu6u3pqxrisl5omi7u3dyi";
+        const fields = {
+            app_id: oneSignalAppId,
+            contents: { en: message },
+            headings: { en: title },
+            include_player_ids: player_id_arr,
+            data: { action_json: jsonData },
+            ios_badgeType: 'Increase',
+            ios_badgeCount: 1,
+            priority: 10
+        };
+        const config = {
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+                'Authorization': 'Basic ' + oneSignalAuthorization
+            }
+        };
+        const response = await axios.post('https://onesignal.com/api/v1/notifications', fields, config);
+        return response.data;
+    } catch (error) {
+        console.error('Error sending OneSignal notification:', error.message);
+        return null;
+    }
+}
+async function oneSignalNotificationSendCall1(notification_arr) {
+    console.log('notification_arr', notification_arr)
+    if (notification_arr && notification_arr.length > 0) {
+        for (const key of notification_arr) {
+            const player_id_arr = [];
+            if (key.player_id !== '') {
+                player_id_arr.push(key.player_id);
+                const title = key.title;
+                const message = key.message;
+                const action_json = key.action_json
+
+
+                return await oneSignalNotificationSend1(title, message, action_json, player_id_arr);
+            }
+        }
+    } else {
+        console.log('Notification array is empty. No notifications to send.');
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 module.exports = {

@@ -54,6 +54,9 @@ function InsertNotification(user_id, other_user_id, action, action_id, action_js
     }
   });
 }
+
+
+
 function getNotificationStatus(user_id, callback) {
   const sql = "SELECT user_id FROM user_master WHERE user_id = ? AND notification_status = '1'";
   connection.query(sql, [user_id], (error, results) => {
