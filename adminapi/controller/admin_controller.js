@@ -10045,6 +10045,8 @@ const getTransactionDetails = async (request, response) => {
         return res.status(500).json({ success: false, msg: languageMessage.internalServerError, key: error.message });
     }
 }
+
+//  get total wallet balance 
 async function getUserTotalWallet(user_id) {
     return new Promise((resolve, reject) => {
         connection.query(
@@ -10076,7 +10078,7 @@ async function getUserTotalWallet(user_id) {
 
 
 
-//  get getCallChargeRequest  call_charge_status - 1 = accepted, 2 = rejected
+//  get getCallChargeRequest =>  call_charge_status - 1 = accepted, 2 = rejected
 const getCallChargeRequest = async (request, response) => {
     try {
         const sql = 'SELECT * FROM user_master WHERE edit_call_charge_status = 1 AND delete_flag = 0 ORDER BY updatetime DESC';
@@ -10109,6 +10111,7 @@ const getCallChargeRequest = async (request, response) => {
 }
 
 
+
 // accpet call charge request 
 const approveCallChargeRequest = async (request, response) => {
     const { user_id } = request.body;
@@ -10123,7 +10126,7 @@ const approveCallChargeRequest = async (request, response) => {
                 return response.status(200).json({ success: false, msg: languageMessage.msgDataNotFound, user_arr: [] });
             }
             let new_call_charge = res[0].new_call_charge;
-            const update = 'UPDATE user_master SET call_charge = ?, call_charge_status = 1, edit_call_charge_status = 2  WHERE user_id = ? AND delete_flag = 0';
+            const update = 'UPDATE user_master SET call_charge = ?, call_charge_status = 1 WHERE user_id = ? AND delete_flag = 0';
             connection.query(update, [new_call_charge, user_id], async (err1, res1) => {
                 if (err1) {
                     return response.status(200).json({ success: false, msg: languageMessage.internalServerError, error: err1.message });
