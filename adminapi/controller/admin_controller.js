@@ -9800,6 +9800,7 @@ ORDER BY
 };
 
 
+
 //adin details 
 const adminDetails = async (request, response) => {
     const { user_id } = request.query;
