@@ -642,7 +642,7 @@ const ActivateDeactivate = async (req, res) => {
                         success: false,
                         msg: languageMessage.msgUserActivatederror,
                     });
-                    
+
                 } else {
                     return res.status(500).json({
                         success: false,
@@ -4080,6 +4080,7 @@ const getExportDetails = async (request, response) => {
     um.ifsc_code,
     um.pancard_back_image,
     um.pancard_front_image,
+    um.gst_image,
     GROUP_CONCAT(DISTINCT dm.name SEPARATOR ', ') AS degrees,
     GROUP_CONCAT(DISTINCT lm.name SEPARATOR ', ') AS languages,
     cm.name AS category,
