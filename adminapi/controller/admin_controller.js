@@ -642,6 +642,7 @@ const ActivateDeactivate = async (req, res) => {
                         success: false,
                         msg: languageMessage.msgUserActivatederror,
                     });
+                    
                 } else {
                     return res.status(500).json({
                         success: false,
@@ -4077,6 +4078,8 @@ const getExportDetails = async (request, response) => {
     um.bank_account_no, 
     um.bank_branch, 
     um.ifsc_code,
+    um.pancard_back_image,
+    um.pancard_front_image,
     GROUP_CONCAT(DISTINCT dm.name SEPARATOR ', ') AS degrees,
     GROUP_CONCAT(DISTINCT lm.name SEPARATOR ', ') AS languages,
     cm.name AS category,
@@ -9242,7 +9245,7 @@ const GetDetailsUpdateRequests = async (request, response) => {
       ON
       um.user_id = drm.user_id
       WHERE 
-      um.delete_flag = 0`;
+      um.delete_flag = 0 ORDER BY drm.details_request_id DESC`;
         connection.query(fetchDetails, (err, res) => {
             if (err) {
                 return response

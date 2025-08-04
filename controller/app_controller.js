@@ -7641,7 +7641,6 @@ const getSubscriptionStatus = async (request, response) => {
 };
 
 
-
 // Payment hide and show
 const paymentHideShow = async (request, response) => {
 
