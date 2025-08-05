@@ -8096,7 +8096,7 @@ const getCustomerScheduleSlot = (request, response) => {
 const manageChatCharge = async( request, response) =>{
     const{ user_id, other_user_id, amount} = request.body;
     try{
-        
+
         if(!user_id){
             return response.status(200).json({ success : false, msg: languageMessage.msg_empty_param, key:'user_id'});
         }  
@@ -8126,7 +8126,7 @@ const manageChatCharge = async( request, response) =>{
             if(res1.affectedRows == 0){
                 return response.status(200).json({ success: false, msg: languageMessage.msgDataNotFound})
             }
-            return response.status(200).json({ success: false, msg: languageMessage.DetailsAdded})
+            return response.status(200).json({ success: true, msg: languageMessage.DetailsAdded})
         })
         })
     }
