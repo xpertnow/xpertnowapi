@@ -8126,15 +8126,124 @@ const manageChatCharge = async( request, response) =>{
             if(res1.affectedRows == 0){
                 return response.status(200).json({ success: false, msg: languageMessage.msgDataNotFound})
             }
+            let video_call_id = res1.insertId;
+
+            const expert_earning = await getExpertCallEarning(user_id, other_user_id, amount, video_call_id)
+            
             return response.status(200).json({ success: true, msg: languageMessage.DetailsAdded})
-        })
-        })
+        });
+        });
     }
     catch(error){
         return response.status(200).json({ success : false, msg: languageMessage.internalServerError, error: error.message});
     }
 }
 
+
+
+//  get expert call earning ..
+async function  getExpertCallEarning ( customer_id, expert_id, call_Charges, video_call_id){
+   return new Promise(( resolve, reject) =>{
+    const sql = `SELECT gst_number FROM user_master WHERE user_id = ? AND delete_flag = 0`;
+    connection.query(sql, [expert_id], async (err, result) => {
+        if (err) {
+            reject(err);
+        }
+
+        let gst_number = result.length > 0 && result[0].gst_number ? result[0].gst_number : null;
+
+        const sql1 = 'SELECT gst, tds, tcs, platform_fee FROM commission_master WHERE delete_flag = 0';
+        connection.query(sql1, async (err1, res1) => {
+            if (err1) {
+                return reject(err1);
+            }
+            if (res1.length === 0) {
+               resolve('NA')
+            }
+
+            let { gst, tcs, tds, platform_fee } = res1[0];
+
+            let received_amount = call_Charges;
+
+            let platform_fee_amount = 0;
+            let platform_fee_gst_amount = 0;
+
+            let grand_total_earning = 0;
+            let net_amount = 0;
+            let gst_amount = 0;
+            let tds_amount = 0;
+            let tcs_amount = 0;
+            let admin_final_earning = 0;
+            if (gst_number) {
+                gst_amount = parseFloat(((received_amount * gst) / (100 + gst)).toFixed(2));
+                net_amount = parseFloat((received_amount - gst_amount).toFixed(2));
+
+                platform_fee_amount = parseFloat((net_amount * platform_fee / 100).toFixed(2));
+                platform_fee_gst_amount = parseFloat((platform_fee_amount * gst / 100).toFixed(2));
+
+                tds_amount = parseFloat((net_amount * tds / 100).toFixed(2));
+                tcs_amount = parseFloat((net_amount * tcs / 100).toFixed(2));
+
+                grand_total_earning = parseFloat((platform_fee_amount + platform_fee_gst_amount - (tds_amount + tcs_amount)).toFixed(2));
+ 
+                
+                admin_final_earning = received_amount - grand_total_earning;
+                const sqlQuery = `
+                    INSERT INTO expert_earning_master 
+                    (type, user_id, expert_id, total_amount, expert_earning, expert_type, gst_per, gst_amt, net_expert_earning, tds_per, tds_amt, tcs_per, tcs_amt, platform_fees, platform_fees_gst_amt, grand_total_expert_earning, createtime, updatetime, video_call_id) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?)
+                `;
+
+                connection.query(sqlQuery, [0, customer_id, expert_id, received_amount, grand_total_earning, 1, gst, gst_amount, net_amount, tds, tds_amount, tcs, tcs_amount, platform_fee_amount, platform_fee_gst_amount, grand_total_earning, video_call_id], (insertErr, insertRes) => {
+                    if (insertErr) {
+                        return reject(insertErr)
+                    }
+                    if (insertRes.affectedRows === 0) {
+                      resolve('Insert Failed')
+                    }
+                     let earning_arr = [];
+                     earning_arr.push({
+                        admin_final_earning : admin_final_earning,
+                        grand_total_earning : grand_total_earning
+                     })
+                    resolve(earning_arr);
+                });
+
+            } else {
+                net_amount = received_amount;
+                platform_fee_amount = parseFloat((net_amount * platform_fee / 100).toFixed(2));
+                let apply_gst_amount = parseFloat((platform_fee_amount * gst / 100).toFixed(2));
+                let net_apply_gst_amount = apply_gst_amount / 2;
+                grand_total_earning = parseFloat((platform_fee_amount - net_apply_gst_amount).toFixed(2));
+                  
+                admin_final_earning = received_amount - grand_total_earning;
+                const insert = `
+                    INSERT INTO expert_earning_master 
+                    (type, user_id, expert_id, total_amount, expert_earning, expert_type, gst_per, gst_amt, net_expert_earning, tds_per, tds_amt, tcs_per, tcs_amt, platform_fees, platform_fees_gst_amt, grand_total_expert_earning, createtime, updatetime, video_call_id) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?)
+                `;
+
+                connection.query(insert, [0, customer_id, expert_id, received_amount, grand_total_earning, 0, gst, net_apply_gst_amount, net_amount, 0, 0, 0, 0, platform_fee_amount, platform_fee_amount, grand_total_earning, video_call_id], (err3, res3) => {
+                    if (err3) {
+                        return reject(err3);
+                    }
+                    if (res3.affectedRows === 0) {
+                       resolve('Insertion failed')
+                    }
+                    let earning_arr = [];
+                    earning_arr.push({
+                       admin_final_earning : admin_final_earning,
+                       grand_total_earning : grand_total_earning
+                    })
+
+                    resolve(earning_arr);
+                    
+                });
+            }
+        });
+    });
+})
+};
 
 
 
