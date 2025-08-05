@@ -5201,7 +5201,7 @@ const checkWalletAmount = async (request, response) => {
             if (result[0]?.active_flag === 0) {
                 return response.status(200).json({ success: false, msg: languageMessage.accountdeactivated, active_status: 0 });
             }
-            const query2 = "SELECT call_charge,video_call_charge FROM user_master WHERE user_id = ? AND delete_flag = 0 AND user_type=2";
+            const query2 = "SELECT call_charge, video_call_charge, chat_charge FROM user_master WHERE user_id = ? AND delete_flag = 0 AND user_type=2";
             const values2 = [other_user_id];
             connection.query(query2, values2, async (err, result1) => {
                 if (err) {
@@ -5213,6 +5213,8 @@ const checkWalletAmount = async (request, response) => {
                 const walletResult = await getUserTotalWallet(user_id);
                 const call_charge = result1[0]?.call_charge;
                 const video_call_charge = result1[0]?.video_call_charge;
+                const chat_charge = result1[0]?.chat_charge;
+
                 let status;
                 if (call_type == 0) {
                     if (walletResult >= call_charge) {
@@ -5220,7 +5222,15 @@ const checkWalletAmount = async (request, response) => {
                     } else {
                         status = false;
                     }
-                } else {
+                } 
+                if(call_type == 2){
+                    if(walletResult >= chat_charge){
+                        status = true;
+                    } else { 
+                        status = false;
+                    }
+                }
+                else {
                     if (walletResult >= video_call_charge) {
                         status = true;
                     } else {
@@ -8091,12 +8101,10 @@ const getCustomerScheduleSlot = (request, response) => {
 };
 
 
-
 //  manage chat charge 
 const manageChatCharge = async( request, response) =>{
     const{ user_id, other_user_id, amount} = request.body;
     try{
-
         if(!user_id){
             return response.status(200).json({ success : false, msg: languageMessage.msg_empty_param, key:'user_id'});
         }  
@@ -8129,8 +8137,16 @@ const manageChatCharge = async( request, response) =>{
             let video_call_id = res1.insertId;
 
             const expert_earning = await getExpertCallEarning(user_id, other_user_id, amount, video_call_id)
-            
-            return response.status(200).json({ success: true, msg: languageMessage.DetailsAdded})
+                 const { admin_final_earning, grand_total_earning } = expert_earning[0];
+
+            const update =
+              "UPDATE video_call_master SET admin_earning=?, provider_earning=? WHERE video_call_id = ?";
+              connection.query(update, [admin_final_earning, grand_total_earning], async(updateErr, updateRes) =>{
+                if(updateErr){
+                    return response.status(200).json({ success : false, msg: languageMessage.internalServerError, error: updateErr.message})
+                }
+              });
+            return response.status(200).json({ success: true, msg: languageMessage.DetailsAdded })
         });
         });
     }
