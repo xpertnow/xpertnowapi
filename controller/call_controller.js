@@ -446,14 +446,14 @@ const VideoVoiceCallEnd = async (request, response) => {
                             return response.status(200).json({ success: false, msg: languageMessage.videocallEndUnsuccess, key: err });
                         }
 
-                        const updateExpertEarning = 'INSERT INTO expert_earning_master(type, user_id, expert_id, expert_earning,admin_commission_amount, createtime, updatetime) VALUES(?, ?, ?, ?, ?, NOW(), NOW())';
+                    const updateExpertEarning = 'INSERT INTO expert_earning_master(type, user_id, expert_id, expert_earning,admin_commission_amount, createtime, updatetime) VALUES(?, ?, ?, ?, ?, NOW(), NOW())';
 
-                        connection.query(updateExpertEarning, [1, customer_id, expert_id, expert_final_earning, admin_earning], async (earningErr, earningRes) => {
-                            if (earningErr) {
-                                return response.status(200).json({ success: false, msg: languageMessage.internalServerError, error: earningErr.message });
-                            }
+                    connection.query(updateExpertEarning, [1, customer_id, expert_id, expert_final_earning, admin_earning], async (earningErr, earningRes) => {
+                     if (earningErr) {
+                      return response.status(200).json({ success: false, msg: languageMessage.internalServerError, error: earningErr.message });
+                    }
 
-                            if (videoresult.affectedRows > 0) {
+                     if (videoresult.affectedRows > 0) {
                                 const user_id_notification = user_id;
                                 let other_user_type;
                                 let other_user_id_notification;
