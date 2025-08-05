@@ -5329,7 +5329,7 @@ const debitWalletAmount = async (request, response) => {
                     const insertQuery = `
                         INSERT INTO wallet_master(user_id, expert_id, amount, status, type, call_id, createtime, updatetime) 
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-                    connection.query(insertQuery, [user_id, expert_id, amount, 1, 3, call_id, now, now], async (err, insertResult) => {
+                    connection.query(insertQuery, [user_id, expert_id, amount, 1, 3, call_id ? call_id : 0, now, now], async (err, insertResult) => {
                         if (err) return response.status(200).json({ success: false, msg: languageMessage.internalServerError, key: err.message });
                         let transition_id = insertResult.insertId;
                         const userWalletbalance = await getUserTotalWallet(user_id);
