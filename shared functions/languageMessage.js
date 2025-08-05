@@ -11,9 +11,13 @@ const messages = {
   editSuccess: ["Profile updated successfully!"],
   profileDeleteSuccess: ["Profile Deleted successfully!"],
   updateBankSuccess: ["Bank Details Updated successfully!"],
-  userCreatedOtpSaveFailed: ["User created successfully, but failed to save OTP.",],
+  userCreatedOtpSaveFailed: [
+    "User created successfully, but failed to save OTP.",
+  ],
   failedToFetchData: ["Failed to fetch data"],
-  userCreatedOtpSendFailed: ["User created successfully, but failed to send OTP.",],
+  userCreatedOtpSendFailed: [
+    "User created successfully, but failed to send OTP.",
+  ],
   errorSendingOtpMail: ["Error sending OTP email."],
   otpSuccess: ["OTP sent successfully."],
   otpfailed: ["Failed to sent OTP."],
@@ -47,7 +51,9 @@ const messages = {
   replySentUnsuccess: ["Reply sent unsuccessfully, please try again"],
   tokenGenerateSuccess: ["Token generated successfully"],
   videocallStartSuccess: ["Video call start successfully"],
-  videocallStartUnsuccess: ["Video call start unsuccessfully, please try again",],
+  videocallStartUnsuccess: [
+    "Video call start unsuccessfully, please try again",
+  ],
   videocallJoinSuccess: ["Video call join successfully"],
   videocallJoinUnsuccess: ["Video call join unsuccessfully, please try again"],
   videocallEndSuccess: ["Video call ended successfully"],
@@ -55,14 +61,18 @@ const messages = {
   ratingSentSuccess: ["Rating added successfully"],
   ratingSentUnsuccess: ["Rating has not been added , please try again"],
   videocallRejectSuccess: ["Video call rejected successfully"],
-  videocallRejectUnsuccess: ["Video call rejected unsuccessfully, please try again",],
+  videocallRejectUnsuccess: [
+    "Video call rejected unsuccessfully, please try again",
+  ],
   bidSentSuccess: ["Bid added successfully"],
   bidSentUnsuccess: ["Bid has not been added , please try again"],
   expertHireSuccess: ["Expert hired successfully"],
   expertHireUnsuccess: ["Expert hired unsuccessfully, please try again"],
   jobBidNotFound: ["Bid not Found"],
   notificationDeleteSuccess: ["Notification delete successfully"],
-  notificationDeleteUnsuccess: ["Notification delete unsuccessfully, please try again",],
+  notificationDeleteUnsuccess: [
+    "Notification delete unsuccessfully, please try again",
+  ],
   bookMarkSuccess: ["Job save successfully"],
   bookMarkUnsuccess: ["Job save unsuccessfully , please try again"],
   jobSaveSuccess: ["Job unsave successfully"],
@@ -70,32 +80,54 @@ const messages = {
   jobReportSuccess: ["Report sent successfully"],
   jobReportUnsuccess: ["Report sent unsuccessfully , please try again"],
   buySubscriptionSuccess: ["Subscription buy successfully"],
-  buySubscriptionUnsuccess: ["Subscription buy unsuccessfully , please try again",],
+  buySubscriptionUnsuccess: [
+    "Subscription buy unsuccessfully , please try again",
+  ],
   projectCostSuccess: ["Project cost added successfully"],
-  projectCostUnsuccess: ["Project cost added unsuccessfully , please try again",],
+  projectCostUnsuccess: [
+    "Project cost added unsuccessfully , please try again",
+  ],
   milestoneCreateSuccess: ["Work space created successfully"],
-  milestoneCreateUnsuccess: ["Work space created unsuccessfully , please try again",],
+  milestoneCreateUnsuccess: [
+    "Work space created unsuccessfully , please try again",
+  ],
   WorkAcceptSuccess: ["Work space accepted successfully"],
-  WorkAcceptUnsuccess: ["Work space accepted unsuccessfully , please try again",],
+  WorkAcceptUnsuccess: [
+    "Work space accepted unsuccessfully , please try again",
+  ],
   WorkRejectSuccess: ["Work space rejected successfully"],
-  WorkRejectUnsuccess: ["Work space rejected unsuccessfully , please try again",],
+  WorkRejectUnsuccess: [
+    "Work space rejected unsuccessfully , please try again",
+  ],
   milestoneRequestSuccess: ["Milestone request sent successfully"],
-  milestoneRequestUnsuccess: ["Milestone request sent unsuccessfully , please try again",],
+  milestoneRequestUnsuccess: [
+    "Milestone request sent unsuccessfully , please try again",
+  ],
   milestoneReleaseSuccess: ["Milestone release successfully"],
-  milestoneReleaseUnsuccess: ["Milestone release unsuccessfully , please try again",],
+  milestoneReleaseUnsuccess: [
+    "Milestone release unsuccessfully , please try again",
+  ],
   milestoneDisputeSuccess: ["Milestone dispute successfully"],
-  milestoneDisputeUnsuccess: ["Milestone dispute unsuccessfully , please try again",],
+  milestoneDisputeUnsuccess: [
+    "Milestone dispute unsuccessfully , please try again",
+  ],
   milestoneCancelSuccess: ["Milestone cancel successfully"],
-  milestoneCancelUnsuccess: ["Milestone cancel unsuccessfully , please try again",],
+  milestoneCancelUnsuccess: [
+    "Milestone cancel unsuccessfully , please try again",
+  ],
   PolicyUpdateSuccess: ["Updated successfully!"],
   logOutSuccess: ["Logout successfully!"],
-  AvailibilityCreatedError: ["Availibility created unsuccessfully, please try again",],
+  AvailibilityCreatedError: [
+    "Availibility created unsuccessfully, please try again",
+  ],
   AvailibilityCreated: ["Availibility created successfully!"],
   invalidDays: ["invalid days insert,please try again!"],
   AvailibilityAlreadyExists: ["Availibility slot already exists"],
   invalidData: ["Invalid Data Send, please check again"],
   availabilityUpdated: ["Availibility updated successfully"],
-  AvailibilityUdpatedError: ["Availibility Udpated unsuccessfully, please try again"],
+  AvailibilityUdpatedError: [
+    "Availibility Udpated unsuccessfully, please try again",
+  ],
   checkToken: ["Your account has been logged in on another device."],
   checkUnathorizedToken: ["Your token is unauthorized."],
   checkInvalidToken: ["Invalid token"],
@@ -107,41 +139,56 @@ const messages = {
   Slotbookerror: ["Slot booked unsuccessfully, please try again"],
 
   convertMilestoneSuccess: ["Work space converted into milestone successfully"],
-  convertMilestoneError: ["Work space converted into milestone unsuccessfully, please try again"],
+  convertMilestoneError: [
+    "Work space converted into milestone unsuccessfully, please try again",
+  ],
   milestoneUpdatedSuccess: ["Work space updated successfully"],
-  milestoneUpdatedUnsuccess: ["Work space updated unsuccessfully , please try again",],
+  milestoneUpdatedUnsuccess: [
+    "Work space updated unsuccessfully , please try again",
+  ],
 
-  ExpertRequestNotApproved: ['Your request as expert is in being review, please wait for admin approval'],
-  ExpertRejected: ['Your request as expert has been rejected by admin'],
+  ExpertRequestNotApproved: [
+    "Your request as expert is in being review, please wait for admin approval",
+  ],
+  ExpertRejected: ["Your request as expert has been rejected by admin"],
 
-  JobCompleted: ['Job completed successfully'],
-  ErrorUpdatingUrl: ['Error updating invoice url'],
-  PdfGeneratedSuccess: ['Invoice generated successfully'],
-  ErrorGeneratingPdf: ['Error generating PDF'],
-  CallScheduled: ['Call scheduled successfully'],
+  JobCompleted: ["Job completed successfully"],
+  ErrorUpdatingUrl: ["Error updating invoice url"],
+  PdfGeneratedSuccess: ["Invoice generated successfully"],
+  ErrorGeneratingPdf: ["Error generating PDF"],
+  CallScheduled: ["Call scheduled successfully"],
 
-  statusUpdated: ['Status updated successfully'],
-  statusNotUpdated: ['Status has not been updated, please try again'],
+  statusUpdated: ["Status updated successfully"],
+  statusNotUpdated: ["Status has not been updated, please try again"],
 
+  expertOffline: ["Expert is offline"],
+  expertOnline: ["Expert is online"],
+  CannotWithdraw: [
+    "You cannot withdraw amount. The minimum amount must be ₹10,000",
+  ],
 
-  expertOffline: ['Expert is offline'],
-  expertOnline: ['Expert is online'],
-  CannotWithdraw: ['You cannot withdraw amount. The minimum amount must be ₹10,000'],
+  RequestSent: ["Profile update request sent successfully"],
+  RequestNotSent: [
+    "Profile update request has not been sent, please try again",
+  ],
 
-  RequestSent: ['Profile update request sent successfully'],
-  RequestNotSent: ['Profile update request has not been sent, please try again'],
+  NotificationSend: ["Notificaion send successfully"],
 
-  NotificationSend: ['Notificaion send successfully'],
+  NdaAmountErr: [
+    "Insufficient balance, wallet amount must be equal to nda price",
+  ],
 
-  NdaAmountErr: ['Insufficient balance, wallet amount must be equal to nda price'],
-
-  MinimumWithdrawalAmount: ['Minimum withdrawal amount must be '],
-  SubscriptionExpired: ['Your subscription has expired'],
-  InvalidNumber: ['Invalid mobile number'],
-  WalletbalanceInvalid: ['Invalid wallet balance'],
-  RefundRequestNotSent: ['Refund request has not been sent, please try again'],
-  accountunderReview: ['Your account has been successfully created, Please wait, until admin will approve your account'],
-accountAlreadyLoggedIn: ["Your account is already logged in on another device"]
-
+  MinimumWithdrawalAmount: ["Minimum withdrawal amount must be "],
+  SubscriptionExpired: ["Your subscription has expired"],
+  InvalidNumber: ["Invalid mobile number"],
+  WalletbalanceInvalid: ["Invalid wallet balance"],
+  RefundRequestNotSent: ["Refund request has not been sent, please try again"],
+  accountunderReview: [
+    "Your account has been successfully created, Please wait, until admin will approve your account",
+  ],
+  accountAlreadyLoggedIn: [
+    "Your account is already logged in on another device",
+  ],
+  DetailsAdded :['Details added successfully']
 };
 module.exports = messages; 

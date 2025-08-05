@@ -5273,6 +5273,7 @@ const checkWalletAmount = async (request, response) => {
 //     }
 // };
 
+
 const debitWalletAmount = async (request, response) => {
     const { user_id, amount, expert_id, call_id } = request.body;
 
@@ -8091,10 +8092,49 @@ const getCustomerScheduleSlot = (request, response) => {
 
 
 
-//   api 
+//  manage chat charge 
+const manageChatCharge = async( request, response) =>{
+    const{ user_id, other_user_id, amount} = request.body;
+    try{
+        if(!user_id){
+            return response.status(200).json({ success : false, msg: languageMessage.msg_empty_param, key:'user_id'});
+        }  
+        if(!other_user_id){
+            return response.status(200).json({ success : false, msg: languageMessage.msg_empty_param, key:'other_user_id'});
+        }
+        if(!amount){
+            return response.status(200).json({ success : false, msg: languageMessage.msg_empty_param, key:'amount'});
+        }
+        const checkUser = 'SELECT user_id, active_flag FROM user_master WHERE user_id = ? AND delete_flag = 0';
+        connection.query(checkUser, [user_id], async(err, res) =>{
+            if(err){
+                return response.status(200).json({ success: false, msg: languageMessage.internalServerError, error: err.message});
+            }
+            if(res.length == 0){
+                return response.status(200).json({ success : false, msg: languageMessage.dataNotFound})
+            }
+            if(res[0].active_flag == 0){
+                return response.status(200).json({ success : false, msg: languageMessage.accountdeactivated, active_status : 0});
+            }
+
+        const sql = "INSERT INTO video_call_master(user_id, other_user_id, type, price, createtime, updatetime) VALUES(?, ?, 3, ?, NOW(), NOW())";
+        connection.query(sql, [user_id, other_user_id, amount], async( err1, res1) =>{
+            if(err1){
+                return response.status(200).json({ success: false, msg: languageMessage.internalServerError, error: err1.message});
+            }
+            if(res1.affectedRows == 0){
+                return response.status(200).json({ success: false, msg: languageMessage.msgDataNotFound})
+            }
+            return response.status(200).json({ success: false, msg: languageMessage.DetailsAdded})
+        })
+        })
+    }
+    catch(error){
+        return response.status(200).json({ success : false, msg: languageMessage.internalServerError, error: error.message});
+    }
+}
 
 
 
 
-
-module.exports = { getExpertDetails, getExpertDetailsById, getExpertByRating, getMyJobs, getJobPostDetails, createJobPost, chatConsultationHistory, chatJobsHistory, callConsultationHistory, callJobsHistory, getExpertByFilter, walletRecharge, walletHistory, getExpertByName, getExpertEarning, withdrawRequest, withdrawHistory, expertCallConsultationHistory, expertCallJobsHistory, getJobPostsForExpert, getExpertEarningHistory, expertChatConsultationHistory, expertChatJobsHistory, getReviewsOfExpert, getExpertMyJobs, getBidsOfJobPost, hireTheExpert, createProjectCost, getSubscriptionPlans, buySubscription, reviewReply, rateExpert, ExpertBidJob, CustomerCallHistory, ExpertCallHistory, getExpertHomeJobs, bookMarkJob, reportOnJob, customerJobFilter, expertJobFilter, createJobCost, createJobMilestone, getJobWorkMilestone, acceptRejectMilestone, sentMilestoneRequest, checkMilestoneRequest, getExpertJobDetails, getUserProfile, downloadApp, deepLink, getExpertByFilterSubLabel, logOut, chatFileUpload, getExpertCompletedJobs, add_availability, edit_availability, get_available_slots, userBookSlot, getExpertScheduleSlot, convertIntoMilestone, updateJobMilestone, getWalletAmount, checkWalletAmount, debitWalletAmount, generateUniqueId, getTokenVariable, completeJob, getExpertEarningPdf, getWalletPdf, getExpertAllEarningPdf, getCustomerMilestoneCharge, getNdaPrice, userChatStatus, getActiveStatus, paymentFailure, initiatePayment, paymentSuccess, getSubscriptionStatus, paymentHideShow, refundRequest, refundOtpVerify, refundOtpResend, getRefundStatus, sendUpcomingCallNotifications, getCustomerScheduleSlot };
+module.exports = { getExpertDetails, getExpertDetailsById, getExpertByRating, getMyJobs, getJobPostDetails, createJobPost, chatConsultationHistory, chatJobsHistory, callConsultationHistory, callJobsHistory, getExpertByFilter, walletRecharge, walletHistory, getExpertByName, getExpertEarning, withdrawRequest, withdrawHistory, expertCallConsultationHistory, expertCallJobsHistory, getJobPostsForExpert, getExpertEarningHistory, expertChatConsultationHistory, expertChatJobsHistory, getReviewsOfExpert, getExpertMyJobs, getBidsOfJobPost, hireTheExpert, createProjectCost, getSubscriptionPlans, buySubscription, reviewReply, rateExpert, ExpertBidJob, CustomerCallHistory, ExpertCallHistory, getExpertHomeJobs, bookMarkJob, reportOnJob, customerJobFilter, expertJobFilter, createJobCost, createJobMilestone, getJobWorkMilestone, acceptRejectMilestone, sentMilestoneRequest, checkMilestoneRequest, getExpertJobDetails, getUserProfile, downloadApp, deepLink, getExpertByFilterSubLabel, logOut, chatFileUpload, getExpertCompletedJobs, add_availability, edit_availability, get_available_slots, userBookSlot, getExpertScheduleSlot, convertIntoMilestone, updateJobMilestone, getWalletAmount, checkWalletAmount, debitWalletAmount, generateUniqueId, getTokenVariable, completeJob, getExpertEarningPdf, getWalletPdf, getExpertAllEarningPdf, getCustomerMilestoneCharge, getNdaPrice, userChatStatus, getActiveStatus, paymentFailure, initiatePayment, paymentSuccess, getSubscriptionStatus, paymentHideShow, refundRequest, refundOtpVerify, refundOtpResend, getRefundStatus, sendUpcomingCallNotifications, getCustomerScheduleSlot, manageChatCharge };
