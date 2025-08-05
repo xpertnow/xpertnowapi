@@ -8401,7 +8401,7 @@ const ManageEarnings = async (request, response) => {
     // em.expert_earning_id 
     // desc`;
 
-    var Fetchpost = `SELECT em.user_id, em.expert_id, em.total_amount, em.expert_earning,  em.expert_type, em.gst_per, em.gst_amt, em.net_expert_earning, em.tds_per, em.tds_amt, em.tcs_per, em.tcs_amt, em.platform_fees, em.platform_fees_gst_amt, em.grand_total_expert_earning, em.type, um.name AS customer_name, umm.name AS expert_name  FROM expert_earning_master em JOIN user_master um ON em.user_id = um.user_id JOIN user_master umm ON em.expert_id = um.user_id WHERE em.delete_flag = 0 AND um.delete_flag = 0`;
+    var Fetchpost = `SELECT em.user_id, em.expert_id, em.total_amount, em.expert_earning,  em.expert_type, em.gst_per, em.gst_amt, em.net_expert_earning, em.tds_per, em.tds_amt, em.tcs_per, em.tcs_amt, em.platform_fees, em.platform_fees_gst_amt, em.grand_total_expert_earning, em.type, um.name AS customer_name, umm.name AS expert_name  FROM expert_earning_master em JOIN user_master um ON em.user_id = um.user_id JOIN user_master umm ON em.expert_id = umm.user_id WHERE em.delete_flag = 0 AND um.delete_flag = 0`;
     try {
         connection.query(Fetchpost, async (err, posts) => {
             if (err) {
