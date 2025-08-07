@@ -5237,7 +5237,16 @@ const checkWalletAmount = async (request, response) => {
                         status = false;
                     }
                 }
-                return response.status(200).json({ success: status, msg: languageMessage.dataFound, walletResult, call_charge: call_charge, video_call_charge: video_call_charge });
+                return response
+                  .status(200)
+                  .json({
+                    success: status,
+                    msg: languageMessage.dataFound,
+                    walletResult,
+                    call_charge: call_charge,
+                    video_call_charge: video_call_charge,
+                    chat_charge: chat_charge,
+                  });
             });
         });
     } catch (err) {
