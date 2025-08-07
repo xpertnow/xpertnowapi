@@ -8150,7 +8150,7 @@ const manageChatCharge = async( request, response) =>{
 
             const update =
               "UPDATE video_call_master SET admin_earning=?, provider_earning=? WHERE video_call_id = ?";
-              connection.query(update, [admin_final_earning, grand_total_earning], async(updateErr, updateRes) =>{
+              connection.query(update, [admin_final_earning, grand_total_earning, video_call_id], async(updateErr, updateRes) =>{
                 if(updateErr){
                     return response.status(200).json({ success : false, msg: languageMessage.internalServerError, error: updateErr.message})
                 }
