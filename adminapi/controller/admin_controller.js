@@ -7745,7 +7745,20 @@ const getUserConsultationById = async (request, response) => {
             .json({ success: false, msg: languageMessage.msg_empty_param });
     }
     try {
-        const fetchDetails = `SELECT vcm.video_call_id, vcm.type, vcm.user_id,user.name AS user_name,  vcm.other_user_id, expert.name AS expert_name,  vcm.call_unique_number, vcm.price, vcm.transaction_id, vcm.duration, vcm.call_duration, vcm.status, vcm.rejected_by, vcm.total_diamond, vcm.room_id, vcm.token, vcm.provider_earning, vcm.admin_per,vcm.admin_earning, vcm.delete_flag, vcm.createtime, vcm.updatetime, vcm.mysqltime, vcm.wallet_amount, vcm.wallet_paid, vcm.tip_amount, vcm.tip_transaction_id, vcm.attend_call, vcm.switch_account, vcm.wallet_paid_tip, vcm.wallet_paid_amount_tip 
+
+   const checkPlateformFee = 'SELECT platform_fee FROM commission_master WHERE commission_id = 1 AND delete_flag = 0';
+        connection.query(checkPlateformFee, async (feeErr, feeRes) => {
+          if (feeErr) {
+            return response
+              .status(200)
+              .json({
+                success: false,
+                msg: languageMessage.internalServerError,
+                error: feeErr.message,
+              });
+          }
+            const platform_fee = feeRes.length > 0 ? feeRes[0].platform_fee : 0;
+        const fetchDetails = `SELECT vcm.video_call_id, vcm.type, vcm.user_id,user.name AS user_name,  vcm.other_user_id, expert.name AS expert_name,  vcm.call_unique_number, vcm.price, vcm.transaction_id, vcm.duration, vcm.call_duration, vcm.status, vcm.rejected_by, vcm.total_diamond, vcm.room_id, vcm.token, vcm.provider_earning, vcm.admin_per,vcm.admin_earning, vcm.delete_flag, vcm.createtime, vcm.updatetime, vcm.mysqltime, vcm.wallet_amount, vcm.wallet_paid, vcm.tip_amount, vcm.tip_transaction_id, vcm.attend_call, vcm.switch_account, vcm.wallet_paid_tip, vcm.wallet_paid_amount_tip,em.expert_earning, em.expert_type, em.gst_per, em.gst_amt, em.net_expert_earning, em.tds_per, em.tds_amt, em.tcs_per, em.tcs_amt, em.platform_fees, em.platform_fees_gst_amt, em.grand_total_expert_earning   
   FROM 
     video_call_master vcm 
   LEFT JOIN 
@@ -7756,6 +7769,7 @@ const getUserConsultationById = async (request, response) => {
     user_master expert 
   ON 
     vcm.other_user_id = expert.user_id AND expert.user_type = 2 
+    LEFT JOIN  expert_earning_master em ON vcm.video_call_id = em.video_call_id
   WHERE 
     vcm.delete_flag = 0 AND vcm.user_id = ?
   ORDER BY 
@@ -7771,12 +7785,16 @@ const getUserConsultationById = async (request, response) => {
                     .status(200)
                     .json({ success: false, msg: languageMessage.msgUserNotFound });
             }
+             const resultWithFee = res.map((item) => ({
+               ...item,
+               platform_fee: platform_fee,
+             }));
             if (res.length > 0) {
                 const expertId = res[0].expert_id;
                 return response.status(200).json({
-                    success: true,
-                    msg: languageMessage.msgDataFound,
-                    user_arr: res,
+                  success: true,
+                  msg: languageMessage.msgDataFound,
+                  user_arr: resultWithFee,
                 });
             } else {
                 return response
@@ -7784,6 +7802,7 @@ const getUserConsultationById = async (request, response) => {
                     .json({ success: false, msg: languageMessage.msgUserNotFound });
             }
         });
+    })
     } catch (error) {
         return response
             .status(200)
