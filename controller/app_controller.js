@@ -8165,7 +8165,6 @@ const manageChatCharge = async( request, response) =>{
 }
 
 
-
 //  get expert call earning ..
 async function  getExpertCallEarning ( customer_id, expert_id, call_Charges, video_call_id){
    return new Promise(( resolve, reject) =>{
@@ -8215,11 +8214,11 @@ async function  getExpertCallEarning ( customer_id, expert_id, call_Charges, vid
                 admin_final_earning = received_amount - grand_total_earning;
                 const sqlQuery = `
                     INSERT INTO expert_earning_master 
-                    (type, user_id, expert_id, total_amount, expert_earning, expert_type, gst_per, gst_amt, net_expert_earning, tds_per, tds_amt, tcs_per, tcs_amt, platform_fees, platform_fees_gst_amt, grand_total_expert_earning, createtime, updatetime, video_call_id) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?)
+                    (type, user_id, expert_id, total_amount, expert_earning, expert_type, gst_per, gst_amt, net_expert_earning, tds_per, tds_amt, tcs_per, tcs_amt, platform_fees, platform_fees_gst_amt, grand_total_expert_earning, admin_commission_amount, createtime, updatetime, video_call_id) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?)
                 `;
 
-                connection.query(sqlQuery, [1, customer_id, expert_id, received_amount, grand_total_earning, 1, gst, gst_amount, net_amount, tds, tds_amount, tcs, tcs_amount, platform_fee_amount, platform_fee_gst_amount, grand_total_earning, video_call_id], (insertErr, insertRes) => {
+                connection.query(sqlQuery, [1, customer_id, expert_id, received_amount, grand_total_earning, 1, gst, gst_amount, net_amount, tds, tds_amount, tcs, tcs_amount, platform_fee_amount, platform_fee_gst_amount, grand_total_earning, admin_final_earning, video_call_id], (insertErr, insertRes) => {
                     if (insertErr) {
                         return reject(insertErr)
                     }
@@ -8244,11 +8243,11 @@ async function  getExpertCallEarning ( customer_id, expert_id, call_Charges, vid
                 admin_final_earning = received_amount - grand_total_earning;
                 const insert = `
                     INSERT INTO expert_earning_master 
-                    (type, user_id, expert_id, total_amount, expert_earning, expert_type, gst_per, gst_amt, net_expert_earning, tds_per, tds_amt, tcs_per, tcs_amt, platform_fees, platform_fees_gst_amt, grand_total_expert_earning, createtime, updatetime, video_call_id) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?)
+                    (type, user_id, expert_id, total_amount, expert_earning, expert_type, gst_per, gst_amt, net_expert_earning, tds_per, tds_amt, tcs_per, tcs_amt, platform_fees, platform_fees_gst_amt, grand_total_expert_earning, createtime, updatetime, admin_commission_amount, video_call_id) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,  ?, NOW(), NOW(), ?)
                 `;
 
-                connection.query(insert, [1, customer_id, expert_id, received_amount, grand_total_earning, 0, gst, net_apply_gst_amount, net_amount, 0, 0, 0, 0, platform_fee_amount, platform_fee_amount, grand_total_earning, video_call_id], (err3, res3) => {
+                connection.query(insert, [1, customer_id, expert_id, received_amount, grand_total_earning, 0, gst, net_apply_gst_amount, net_amount, 0, 0, 0, 0, platform_fee_amount, platform_fee_amount, grand_total_earning, admin_final_earning, video_call_id], (err3, res3) => {
                     if (err3) {
                         return reject(err3);
                     }
@@ -8269,6 +8268,7 @@ async function  getExpertCallEarning ( customer_id, expert_id, call_Charges, vid
     });
 })
 };
+
 
 
 
