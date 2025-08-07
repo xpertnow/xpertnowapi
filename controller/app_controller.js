@@ -8219,7 +8219,7 @@ async function  getExpertCallEarning ( customer_id, expert_id, call_Charges, vid
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?)
                 `;
 
-                connection.query(sqlQuery, [0, customer_id, expert_id, received_amount, grand_total_earning, 1, gst, gst_amount, net_amount, tds, tds_amount, tcs, tcs_amount, platform_fee_amount, platform_fee_gst_amount, grand_total_earning, video_call_id], (insertErr, insertRes) => {
+                connection.query(sqlQuery, [1, customer_id, expert_id, received_amount, grand_total_earning, 1, gst, gst_amount, net_amount, tds, tds_amount, tcs, tcs_amount, platform_fee_amount, platform_fee_gst_amount, grand_total_earning, video_call_id], (insertErr, insertRes) => {
                     if (insertErr) {
                         return reject(insertErr)
                     }
@@ -8248,7 +8248,7 @@ async function  getExpertCallEarning ( customer_id, expert_id, call_Charges, vid
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?)
                 `;
 
-                connection.query(insert, [0, customer_id, expert_id, received_amount, grand_total_earning, 0, gst, net_apply_gst_amount, net_amount, 0, 0, 0, 0, platform_fee_amount, platform_fee_amount, grand_total_earning, video_call_id], (err3, res3) => {
+                connection.query(insert, [1, customer_id, expert_id, received_amount, grand_total_earning, 0, gst, net_apply_gst_amount, net_amount, 0, 0, 0, 0, platform_fee_amount, platform_fee_amount, grand_total_earning, video_call_id], (err3, res3) => {
                     if (err3) {
                         return reject(err3);
                     }
