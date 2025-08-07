@@ -8141,7 +8141,7 @@ const manageChatCharge = async( request, response) =>{
                 return response.status(200).json({ success: false, msg: languageMessage.internalServerError, error: err1.message});
             }
             if(res1.affectedRows == 0){
-                return response.status(200).json({ success: false, msg: languageMessage.msgDataNotFound})
+                return response.status(200).json({ success: false, msg: languageMessage.dataNotFound})
             }
             let video_call_id = res1.insertId;
 
