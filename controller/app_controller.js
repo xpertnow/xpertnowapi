@@ -12607,6 +12607,7 @@ const manageChatCharge = async (request, response) => {
               .json({ success: false, msg: languageMessage.dataNotFound });
           }
           let video_call_id = res1.insertId;
+           const now = new Date();
           const insertQuery = `
                         INSERT INTO wallet_master(user_id, expert_id, amount, status, type, call_id, createtime, updatetime) 
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
