@@ -293,17 +293,7 @@ const userResendOtp = async (request, response) => {
             }
 
             const otp = await generateOTP(6);
-            // const otp = 123456;
-
-            // const mobile = result[0].mobile;
-            // const otp = Math.floor(100000 + Math.random() * 900000); // Generate a random OTP
-            // let notiSendStatus;
-            // try {
-            //     notiSendStatus = await otpSendMessage(mobile, otp);
-            // } catch (error) {
-            //     console.error('OTP Sending Failed:', error);
-            //     notiSendStatus = error;
-            // }
+           
 
             const clearOtpQuery = `
             UPDATE user_master 
